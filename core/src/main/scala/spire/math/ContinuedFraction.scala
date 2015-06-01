@@ -7,6 +7,12 @@ object ContinuedFraction {
 	def apply(r: Rational): ContinuedFraction = 
 		ContinuedFraction( computeFirst(r) )
 
+	// If the Rational's numerator is less than the denominator,
+	// then it's necessary to prepend a 0, and then compute the inverse
+	private def computeFirst(r: Rational): List[BigInt] = 
+		if(r.numerator < r.denominator) 0 :: compute(Rational(r.denominator, r.numerator))
+		else compute(r)
+
 	// would prefer to use scalaz.NonEmptyList here
 	// but: https://groups.google.com/forum/#!topic/typelevel/5wCYLpCpOjc
 	private def compute(r: Rational): List[BigInt] = {
@@ -23,10 +29,6 @@ object ContinuedFraction {
 			else List(1)
 		}
 	}
-
-	private def computeFirst(r: Rational): List[BigInt] = 
-		if(r.numerator < r.denominator) 0 :: compute(Rational(r.denominator, r.numerator))
-		else compute(r)
 
 	// un-safe usage of `head`!
 	def first(c: ContinuedFraction): BigInt = 
